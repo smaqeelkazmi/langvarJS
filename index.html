@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Demo - LangVarJS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <h1>hello <span data-lv="LANGVAR"></span></h1>
+    <p data-lv="INIT"></p>
+
+    <script>
+        var vr = {
+            LANGVAR : "World...",
+            INIT    : "Init the world now..."
+        };
+        const lvn = new lv(vr);
+    </script>
+</body>
+</html>
