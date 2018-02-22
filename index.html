@@ -9,15 +9,19 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <h1>hello <span data-lv="LANGVAR"></span></h1>
-    <p data-lv="INIT"></p>
+    <h1>hello <span lv="LANGVAR"></span></h1>
+    <p lv-module="INIT">hello
+        <a href="#" onclick="alert('hhh')">%WORLD%</a>
+    </p>
 
     <script>
         var vr = {
             LANGVAR : "World...",
-            INIT    : "Init the world now..."
         };
-        const lvn = new lv(vr);
+        const lvn = new LangVar(vr);
+        lvn.module('INIT', {
+            WORLD: "world in module"
+        });
     </script>
 </body>
 </html>
