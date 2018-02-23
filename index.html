@@ -6,35 +6,42 @@
     <title>Demo - LangVarJS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="development/main.js"></script>
 </head>
 <body>
     <h1>hello
         <span lv="LANGVAR"></span>
-        <span lv="VAR"></span>
+        <span lv="VAR">This is good value</span>
     </h1>
     <p lv-module="INIT">hello
-        <a href="#" onclick="update();">%LANGVAR%</a>
+        <a href="#">%LANGVAR% & %VAR%</a>
     </p>
 
     <script>
         var vr = {
             LANGVAR : "World...",
-            VAR : "and dummy variable"
         };
         const lvn = new LangVar(vr);
         lvn.module('INIT', {
-            LANGVAR: "Before updated module"
+            LANGVAR: "Before updated module",
+            VAR: ''
         });
 
         function update() {
             lvn.update({
-                LANGVAR : 'World... is now on next'
+                LANGVAR : 'World... is now on next',
+                VAR: 'VAR updated...............'
             });
             lvn.update('INIT', {
-                LANGVAR: "After module updated"
+                LANGVAR: "After module updated",
+                VAR: '',
             })
         }
+
+        $(document.body).on('click','a' ,function() {
+            update();
+        })
     </script>
 </body>
 </html>

@@ -7,7 +7,7 @@ class LangVar {
         const vars = {
             obj: obj, // object for direct variable
             selector: selector + "lv",  // query selector
-            modules: {} // modules list with key > name & v > innerContent
+            modules: [] // modules list with key > name & v > innerContent
         }
         Object.assign(this, vars);
         if (this.obj) {
@@ -30,11 +30,19 @@ class LangVar {
     module(n, obj = {}) {
         const m = document.querySelector("[" + this.selector + "-module=" + n + "]"); // getting the module container
         let m_c = null;  // store updated content to return
+        if (typeof obj === 'undefined')
+            return this;
+            
         if (!this.modules[n]) {
             this.modules[n] = m.innerHTML; // adding module to the modules list
+            this.modules['obj-' + n] = obj; // setting module object into modules with obj prefix
+        } else {
+            if (isEquivalent(this.modules['obj-' + n], obj))
+                return this;
+            this.modules['obj-' + n] = Object.assign(this.modules['obj-' + n], obj);
         }
         try {
-            m_c = this._putContentOnModule(obj, this.modules[n]); // get updated module by replacing variables
+            m_c = this._putContentOnModule(this.modules['obj-' + n], this.modules[n]); // get updated module by replacing variables
         } catch (error) {
             console.warn("Unable to update module " + n);
         }
@@ -111,4 +119,31 @@ class LangVar {
         });
         return e;
     }
+}
+
+
+const isEquivalent = (a, b) => {
+    // Create arrays of property names
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length != bProps.length) {
+        return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
 }
