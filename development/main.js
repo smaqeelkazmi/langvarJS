@@ -1,8 +1,9 @@
 class LangVar {
     /* 
-    * @param obj Object of the variables to write
-    * @param select the HTML select format default is [lv]
-    */
+     * @param obj Object of the variables to write
+     * @param select the HTML select format default is [lv]
+     * @return object
+     */
     constructor(obj = {}, selector = '') {
         const vars = {
             obj: obj, // object for direct variable
@@ -23,16 +24,16 @@ class LangVar {
 
 
     /* 
-    * @type public to add a module
-    * @param n name of the container for module
-    * @param obj the object of the variables to write
-    */
+     * @type public to add a module
+     * @param n name of the container for module
+     * @param obj the object of the variables to write
+     * @return class
+     */
     module(n, obj = {}) {
         const m = document.querySelector("[" + this.selector + "-module=" + n + "]"); // getting the module container
         let m_c = null;  // store updated content to return
-        if (typeof obj === 'undefined')
+        if (typeof obj !== 'object' || !obj)
             return this;
-            
         if (!this.modules[n]) {
             this.modules[n] = m.innerHTML; // adding module to the modules list
             this.modules['obj-' + n] = obj; // setting module object into modules with obj prefix
@@ -55,6 +56,7 @@ class LangVar {
      * @type public to update existing variables or module
      * @param g if object then update vars else update the module
      * @param obj the object of the variables to update
+     * @return class
      */
     update(g, obj) {
         const self = this;
@@ -73,12 +75,14 @@ class LangVar {
         } else {
             self.module(g, obj); // if module defined then update module
         }
+        return this;
     }
 
 
     /* 
-    * @type Private function to Init the variable extraction to HTML
-    */
+     * @type Private function to Init the variable extraction to HTML
+     * @return void
+     */
     _extract() {
         const self = this;
         Object.keys(this.obj).map(function (k) {
@@ -92,10 +96,11 @@ class LangVar {
 
 
     /* 
-    * @type Private Function to write down variable in extract()
-    * @param k Key where to write the variable
-    * @param v Value to write in
-    */
+     * @type Private Function to write down variable in extract()
+     * @param k Key where to write the variable
+     * @param v Value to write in
+     * @return void
+     */
     _putContent(k, v) {
         let c = window.document.querySelectorAll('[' + this.selector + '="' + k + '"]');
         if (c.length > 1) {
@@ -112,6 +117,7 @@ class LangVar {
      * @type Private Function to write down variable in module()
      * @param obj object to replace in content
      * @param e content to replace
+     * @return html content
      */
     _putContentOnModule(obj, e) {
         Object.keys(obj).map(function (k) {
@@ -122,6 +128,11 @@ class LangVar {
 }
 
 
+/* 
+ * @type function to compare two objects
+ * @param a,b object for comparison
+ * @return boolean
+ */
 const isEquivalent = (a, b) => {
     // Create arrays of property names
     var aProps = Object.getOwnPropertyNames(a);
