@@ -9,19 +9,32 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <h1>hello <span lv="LANGVAR"></span></h1>
+    <h1>hello
+        <span lv="LANGVAR"></span>
+        <span lv="VAR"></span>
+    </h1>
     <p lv-module="INIT">hello
-        <a href="#" onclick="alert('hhh')">%WORLD%</a>
+        <a href="#" onclick="update();">%LANGVAR%</a>
     </p>
 
     <script>
         var vr = {
             LANGVAR : "World...",
+            VAR : "and dummy variable"
         };
         const lvn = new LangVar(vr);
         lvn.module('INIT', {
-            WORLD: "world in module"
+            LANGVAR: "Before updated module"
         });
+
+        function update() {
+            lvn.update({
+                LANGVAR : 'World... is now on next'
+            });
+            lvn.update('INIT', {
+                LANGVAR: "After module updated"
+            })
+        }
     </script>
 </body>
 </html>
