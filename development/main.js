@@ -4,20 +4,20 @@ class LangVar {
     * @param select the HTML select format default is [lv]
     */
     constructor(obj = {}, selector = '') {
-       const vars = {
-           obj : obj, // object for direct variable
-           selector: selector + "lv",  // query selector
-           modules: {} // modules list with key > name & v > innerContent
-       }
-       Object.assign(this, vars);
-       if (this.obj) {
-           this._extract();
-       }
+        const vars = {
+            obj: obj, // object for direct variable
+            selector: selector + "lv",  // query selector
+            modules: {} // modules list with key > name & v > innerContent
+        }
+        Object.assign(this, vars);
+        if (this.obj) {
+            this._extract();
+        }
 
-       // return accessible functions and variables for class instance
-       return {
-           module: this.module.bind(this),
-           update: this.update.bind(this)
+        // return accessible functions and variables for class instance
+        return {
+            module: this.module.bind(this),
+            update: this.update.bind(this)
         };
     }
 
@@ -36,7 +36,7 @@ class LangVar {
         try {
             m_c = this._putContentOnModule(obj, this.modules[n]); // get updated module by replacing variables
         } catch (error) {
-            console.warn("Unable to update module "+ n);
+            console.warn("Unable to update module " + n);
         }
         m.innerHTML = m_c;
         return this;
@@ -73,7 +73,7 @@ class LangVar {
     */
     _extract() {
         const self = this;
-        Object.keys(this.obj).map(function(k) {
+        Object.keys(this.obj).map(function (k) {
             try {
                 self._putContent(k, self.obj[k]);
             } catch (error) {
@@ -89,7 +89,7 @@ class LangVar {
     * @param v Value to write in
     */
     _putContent(k, v) {
-        let c = window.document.querySelectorAll('['+ this.selector +'="'+ k +'"]');
+        let c = window.document.querySelectorAll('[' + this.selector + '="' + k + '"]');
         if (c.length > 1) {
             for (let i = 0; i < c.length; i++) {
                 c[i].innerHTML = v;
@@ -111,35 +111,4 @@ class LangVar {
         });
         return e;
     }
-}
-
-
-/* 
-* @type function to compare two objects
-* @param a,b object for comparison
-*/
-function isEquivalent(a, b) {
-    // Create arrays of property names
-    var aProps = Object.getOwnPropertyNames(a);
-    var bProps = Object.getOwnPropertyNames(b);
-
-    // If number of properties is different,
-    // objects are not equivalent
-    if (aProps.length != bProps.length) {
-        return false;
-    }
-
-    for (var i = 0; i < aProps.length; i++) {
-        var propName = aProps[i];
-
-        // If values of same property are not equal,
-        // objects are not equivalent
-        if (a[propName] !== b[propName]) {
-            return false;
-        }
-    }
-
-    // If we made it this far, objects
-    // are considered equivalent
-    return true;
 }
