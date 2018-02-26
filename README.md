@@ -8,6 +8,7 @@ Here is the basic step to use dynamic variables in your html file
 
 **Example 1:**
 This example will show you how to use a variable into your html file by using element attributes:
+
 *HTML*
 
     <span lv="myVariable"></span>
@@ -20,6 +21,7 @@ This example will show you how to use a variable into your html file by using el
     var LangVar = new LangVar(obj);
 
 for `W3C` validation standards you can use `data-` attribute as a prefix, see example below:
+
 *HTML*
 
     <span data-lv="myVariable"></span>
@@ -33,6 +35,7 @@ for `W3C` validation standards you can use `data-` attribute as a prefix, see ex
 
 **Example 2:**
 The `module()` method gives you the feature creating a module and use `%` sign to define variables in your contents dynamically. In this example we will use a `Module` to define multiple variables using `%` sign
+
 *HTML*
 
     <p lv-module="myModule">
@@ -52,7 +55,7 @@ You can update your `variables` dynamically using `update()` method. In this exa
 
 *Javascript*
 
-    LangVar.update('INIT', {
+    LangVar.update('myModule', {
         HOME_TOWN: 'ISLAMABAD'
     })
 
