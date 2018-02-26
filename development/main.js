@@ -27,7 +27,7 @@ class LangVar {
      * @type public to add a module
      * @param n name of the container for module
      * @param obj the object of the variables to write
-     * @return class
+     * @return instance
      */
     module(n, obj = {}) {
         const m = document.querySelector("[" + this.selector + "-module=" + n + "]"); // getting the module container
@@ -38,6 +38,7 @@ class LangVar {
             this.modules[n] = m.innerHTML; // adding module to the modules list
             this.modules['obj-' + n] = obj; // setting module object into modules with obj prefix
         } else {
+            // if new object is same as old one then return
             if (isEquivalent(this.modules['obj-' + n], obj))
                 return this;
             this.modules['obj-' + n] = Object.assign(this.modules['obj-' + n], obj);
@@ -56,7 +57,7 @@ class LangVar {
      * @type public to update existing variables or module
      * @param g if object then update vars else update the module
      * @param obj the object of the variables to update
-     * @return class
+     * @return instance
      */
     update(g, obj) {
         const self = this;
@@ -96,7 +97,7 @@ class LangVar {
 
 
     /* 
-     * @type Private Function to write down variable in extract()
+     * @type Private Function to write down variable in context
      * @param k Key where to write the variable
      * @param v Value to write in
      * @return void
