@@ -1,8 +1,8 @@
 class LangVar {
-    /* 
-     * @param obj Object of the variables to write
-     * @param select the HTML select format default is [lv]
-     * @return object
+    /**
+     * @param {object} obj Object of the variables to write
+     * @param {string} selector the HTML select format default is [lv]
+     * @return {object} object
      */
     constructor(obj = {}, selector = '') {
         const vars = {
@@ -122,7 +122,7 @@ class LangVar {
      */
     _putContentOnModule(obj, e) {
         Object.keys(obj).map(function (k) {
-            e = e.replace("%" + k + "%", obj[k]);
+            e = e.replace('%' + k + '%', obj[k]);
         });
         return e;
     }

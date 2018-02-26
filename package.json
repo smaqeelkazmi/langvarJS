@@ -1,0 +1,26 @@
+{
+  "name": "langvarjs",
+  "version": "1.0.0",
+  "description": "This package provides the feature to write variables effeicently into your html and defining value in JS Objects",
+  "main": "langvar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smaqeelkazmi/langvarJS.git"
+  },
+  "keywords": [
+    "variables",
+    "writing",
+    "effeicency"
+  ],
+  "author": "SM Aqeel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smaqeelkazmi/langvarJS/issues"
+  },
+  "homepage": "https://github.com/smaqeelkazmi/langvarJS#readme",
+  "devDependencies": {
+  }
+}
