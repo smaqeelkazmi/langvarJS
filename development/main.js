@@ -122,7 +122,7 @@ class LangVar {
      */
     _putContentOnModule(obj, e) {
         Object.keys(obj).map(function (k) {
-            e = e.replace('{' + k + '}', obj[k]);
+            e = e.replace('%' + k + '%', obj[k]);
         });
         return e;
     }
