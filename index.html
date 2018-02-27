@@ -15,7 +15,7 @@
         <span lv="VAR">This is good value</span>
     </h1>
     <p lv-module="INIT">hello
-        <a href="#">%LANGVAR% & %VAR%</a>
+        <a href="#">{LANGVAR} & {VAR}</a>
     </p>
 
     <script>
@@ -39,7 +39,7 @@
             })
         }
 
-        $(document.body).on('click','a' ,function() {
+         $('a').click(function() {
             update();
         })
     </script>

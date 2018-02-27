@@ -74,7 +74,7 @@ class LangVar {
             });
             this.obj = Object.assign(this.obj, g);
         } else {
-            self.module(g, obj); // if module defined then update module
+            this.module(g, obj); // if module defined then update module
         }
         return this;
     }
@@ -122,7 +122,7 @@ class LangVar {
      */
     _putContentOnModule(obj, e) {
         Object.keys(obj).map(function (k) {
-            e = e.replace('%' + k + '%', obj[k]);
+            e = e.replace('{' + k + '}', obj[k]);
         });
         return e;
     }
