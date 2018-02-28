@@ -1,15 +1,16 @@
 class LangVar {
     /**
+     * Class constructor
      * @param {object} obj Object of the variables to write
      * @param {string} selector the HTML select format default is [lv]
-     * @return {object} object
+     * @return {object}
      */
     constructor(obj = {}, selector = '') {
         const vars = {
             obj: obj, // object for direct variable
             selector: selector + "lv",  // query selector
             modules: [] // modules list with key > name & v > innerContent
-        }
+        };
         Object.assign(this, vars);
         if (this.obj) {
             this._extract();
@@ -24,7 +25,7 @@ class LangVar {
 
 
     /* 
-     * @type public to add a module
+     * @public to add a module
      * @param n name of the container for module
      * @param obj the object of the variables to write
      * @return instance
@@ -54,7 +55,7 @@ class LangVar {
 
 
     /* 
-     * @type public to update existing variables or module
+     * @public to update existing variables or module
      * @param g if object then update vars else update the module
      * @param obj the object of the variables to update
      * @return instance
@@ -81,7 +82,7 @@ class LangVar {
 
 
     /* 
-     * @type Private function to Init the variable extraction to HTML
+     * @private function to Init the variable extraction to HTML
      * @return void
      */
     _extract() {
@@ -97,7 +98,7 @@ class LangVar {
 
 
     /* 
-     * @type Private Function to write down variable in context
+     * @private Function to write down variable in context
      * @param k Key where to write the variable
      * @param v Value to write in
      * @return void
@@ -115,7 +116,7 @@ class LangVar {
 
 
     /* 
-     * @type Private Function to write down variable in module()
+     * @private Function to write down variable in module()
      * @param obj object to replace in content
      * @param e content to replace
      * @return html content
@@ -126,36 +127,4 @@ class LangVar {
         });
         return e;
     }
-}
-
-
-/* 
- * @type function to compare two objects
- * @param a,b object for comparison
- * @return boolean
- */
-const isEquivalent = (a, b) => {
-    // Create arrays of property names
-    var aProps = Object.getOwnPropertyNames(a);
-    var bProps = Object.getOwnPropertyNames(b);
-
-    // If number of properties is different,
-    // objects are not equivalent
-    if (aProps.length != bProps.length) {
-        return false;
-    }
-
-    for (var i = 0; i < aProps.length; i++) {
-        var propName = aProps[i];
-
-        // If values of same property are not equal,
-        // objects are not equivalent
-        if (a[propName] !== b[propName]) {
-            return false;
-        }
-    }
-
-    // If we made it this far, objects
-    // are considered equivalent
-    return true;
 }

@@ -1,8 +1,9 @@
 /* 
-* @type function to compare two objects
-* @param a,b object for comparison
-*/
-export const isEquivalent = (a, b) => {
+ * @type function to compare two objects
+ * @param a,b object for comparison
+ * @return boolean
+ */
+const isEquivalent = (a, b) => {
     // Create arrays of property names
     var aProps = Object.getOwnPropertyNames(a);
     var bProps = Object.getOwnPropertyNames(b);
@@ -27,6 +28,3 @@ export const isEquivalent = (a, b) => {
     // are considered equivalent
     return true;
 }
-
-
-export default helper = [isEquivalent];
