@@ -1,130 +1,68 @@
 class LangVar {
     /**
-     * Class constructor
-     * @param {object} obj Object of the variables to write
-     * @param {string} selector the HTML select format default is [lv]
-     * @return {object}
+     * Class Constructor
+     * @param {string} m - Name of the module
+     * @param {object} obj - The Object of variables to rewrite in module
+     * @return {object} The public calls
      */
-    constructor(obj = {}, selector = '') {
+    constructor (m, obj = {}) {
         const vars = {
-            obj: obj, // object for direct variable
-            selector: selector + "lv",  // query selector
-            modules: [] // modules list with key > name & v > innerContent
+            m: null,                        // Module Node
+            obj: obj,                       // object
+            _mObj: null,                    // Stores Module Object while compiling
+            _mqs: `lv-module="${m}"`,       // module query selector
+            _w: true                        // Enable or Disable warning
         };
         Object.assign(this, vars);
-        if (this.obj) {
-            this._extract();
+
+        if (typeof m !== undefined && typeof m === 'string') {
+            this._init();
         }
 
-        // return accessible functions and variables for class instance
         return {
-            module: this.module.bind(this),
-            update: this.update.bind(this)
+            m: m // return the name of the module
         };
     }
 
-
-    /* 
-     * @public to add a module
-     * @param n name of the container for module
-     * @param obj the object of the variables to write
-     * @return instance
+    /**
+     * Initiate module
+     * @private function
      */
-    module(n, obj = {}) {
-        const m = document.querySelector("[" + this.selector + "-module=" + n + "]"); // getting the module container
-        let m_c = null;  // store updated content to return
-        if (typeof obj !== 'object' || !obj)
-            return this;
-        if (!this.modules[n]) {
-            this.modules[n] = m.innerHTML; // adding module to the modules list
-            this.modules['obj-' + n] = obj; // setting module object into modules with obj prefix
-        } else {
-            // if new object is same as old one then return
-            if (isEquivalent(this.modules['obj-' + n], obj))
-                return this;
-            this.modules['obj-' + n] = Object.assign(this.modules['obj-' + n], obj);
+    _init() {
+        this.m = $(`[${this._mqs}]`);
+        this._rmSpaces(); // Remove the spaces from expression parantheses
+        console.log(this.m_c)
+    }
+
+    /**
+     * Removes the spaces in HTML expressions paranthese
+     * @private {function} - Removes Spaces
+     * @return {void}
+     */
+    _rmSpaces() {
+        let obj = this.m.innerHTML.split("{");
+        for (var i = 1; i < obj.length; i++) {
+            obj[i] = '{' + obj[i].split('}')[0].replace(/\s/g, '') + '}';
         }
-        try {
-            m_c = this._putContentOnModule(this.modules['obj-' + n], this.modules[n]); // get updated module by replacing variables
-        } catch (error) {
-            console.warn("Unable to update module " + n);
-        }
-        m.innerHTML = m_c;
-        return this;
+        this.m_c = obj;
     }
 
 
-    /* 
-     * @public to update existing variables or module
-     * @param g if object then update vars else update the module
-     * @param obj the object of the variables to update
-     * @return instance
+    /**
+     * Throw warnings
+     * @private 
+     * @param {string} m - Message to print
+     * @return {void}
      */
-    update(g, obj) {
-        const self = this;
-        if (typeof g === "object") {
-            Object.keys(g).map(function (k) {
-                try {
-                    // updating with dirty checking methodology
-                    if (g[k] !== self.obj[k]) {
-                        self._putContent(k, g[k]); // if direct variable then update
-                    }
-                } catch (error) {
-                    console.warn("Unable to find variable [" + k + "] to update");
-                }
-            });
-            this.obj = Object.assign(this.obj, g);
-        } else {
-            this.module(g, obj); // if module defined then update module
-        }
-        return this;
-    }
-
-
-    /* 
-     * @private function to Init the variable extraction to HTML
-     * @return void
-     */
-    _extract() {
-        const self = this;
-        Object.keys(this.obj).map(function (k) {
-            try {
-                self._putContent(k, self.obj[k]);
-            } catch (error) {
-                console.warn("Unable to write variable [" + k + "]");
-            }
-        });
-    }
-
-
-    /* 
-     * @private Function to write down variable in context
-     * @param k Key where to write the variable
-     * @param v Value to write in
-     * @return void
-     */
-    _putContent(k, v) {
-        let c = window.document.querySelectorAll('[' + this.selector + '="' + k + '"]');
-        if (c.length > 1) {
-            for (let i = 0; i < c.length; i++) {
-                c[i].innerHTML = v;
-            }
-        } else {
-            c[0].innerHTML = v;
+    _warnings(w) {
+        if (this._w === true) {
+            console.warn(w);
         }
     }
 
 
-    /* 
-     * @private Function to write down variable in module()
-     * @param obj object to replace in content
-     * @param e content to replace
-     * @return html content
+    /**
+     * Setters
      */
-    _putContentOnModule(obj, e) {
-        Object.keys(obj).map(function (k) {
-            e = e.replace('%' + k + '%', obj[k]);
-        });
-        return e;
-    }
+    
 }

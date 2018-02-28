@@ -28,3 +28,18 @@ const isEquivalent = (a, b) => {
     // are considered equivalent
     return true;
 }
+
+
+
+/**
+ * Query Selector
+ * @param {string} q - HTML element attribute to select DOM
+ * @return {NodeList} 
+ */
+
+const $ = (q) => {
+    const selector = document.querySelectorAll(q);
+    if (selector.length < 2)
+        return selector[0];
+    return selector;
+};
