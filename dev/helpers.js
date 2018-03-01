@@ -37,7 +37,7 @@ const isEquivalent = (a, b) => {
  * @return {NodeList} 
  */
 
-const $ = (q) => {
+const $$ = (q) => {
     const selector = document.querySelectorAll(q);
     if (selector.length < 2)
         return selector[0];

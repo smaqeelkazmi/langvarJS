@@ -5,7 +5,8 @@
   "main": "langvar.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "babel": "babel dev -w -o prod/langvar.js"
+    "babel": "babel dev -w -o prod/langvar.js",
+    "jsdoc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -r dev/ -d documentation"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,8 @@
   "homepage": "https://github.com/smaqeelkazmi/langvarJS#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1"
+    "babel-preset-es2015": "^6.24.1",
+    "ink-docstrap": "^1.3.2",
+    "jsdoc": "^3.5.5"
   }
 }

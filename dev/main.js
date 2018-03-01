@@ -1,9 +1,15 @@
+/**
+ * LangVar Library Class
+ * @class
+ * @author SM. Aqeel
+ */
 class LangVar {
     /**
      * Class Constructor
-     * @param {string} m - Name of the module
-     * @param {object} obj - The Object of variables to rewrite in module
-     * @return {object} The public calls
+     * @default
+     * @param {string} m=null - Name of the module
+     * @param {Object} obj={} - The Object of variables to rewrite in module
+     * @return {Object} - The public calls
      */
     constructor (m, obj = {}) {
         const vars = {
@@ -27,29 +33,26 @@ class LangVar {
 
     /**
      * Initiate module
-     * @private function
+     * @private
      */
     _init() {
-        this.m = $(`[${this._mqs}]`);
-        const compMod =  this._compileModule(this.m);  // get compiled module
-        const getObj = compMod.object;
-        let c = compMod.content;
-        Object.keys(getObj).map((k) => {
-            if (getObj[k] !== undefined) {
-                c = c.replace(`{${k}}`, getObj[k]);
-            } else {
-                c = c.replace(`{${k}}`, '');
-            }
-        });
-        console.log(c);
+        this.m = $$(`[${this._mqs}]`);
+        const compMod =  this._getCompileModule(this.m);  // get compiled module
+        this.m.innerHTML = this._getGenContent(
+            compMod.content, 
+            compMod.object
+        ); // print result in module
     }
 
     /**
-     * Removes the spaces in HTML expressions paranthese and compile module
-     * @private {function} - Removes Spaces and Compile module
-     * @return {object} - object -> variables with values && content -> compiled content for modification
+     * Remove Spaces
+     * Store used variables name in {obj}
+     * return object of used variables and modified content
+     * @private
+     * @param {NodeSelector} - Module Node to compile and produce result
+     * @return {Object} - object -> variables with values && content -> compiled content for modification
      */
-    _compileModule(elm) {
+    _getCompileModule(elm) {
         let e = elm.innerHTML.split("{"); // get element content with frst split
         let obj = {}; // store variable names
         for (var i = 1; i < e.length; i++) {
@@ -62,6 +65,26 @@ class LangVar {
             object: obj,            // variable used in module
             content: e.join('')     // content to replace module after compilation
         }
+    }
+
+    /**
+     * Print Result 
+     * @private
+     * @param {string} c - Content to replace in
+     * @param {Object} obj - Replace content with this
+     * @return {string} Return produced content after replacing
+     */
+    _getGenContent(c, obj) {
+        Object.keys(obj).map((k) => {
+            let rgx = `{${k}}`;
+            rgx = new RegExp(rgx, "g");
+            if (obj[k] !== undefined) {
+                c = c.replace(rgx, obj[k]);
+            } else {
+                c = c.replace(rgx, '');
+            }
+        });
+        return c;
     }
 
 

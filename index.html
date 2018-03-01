@@ -12,15 +12,17 @@
 </head>
 <body>
     <div lv-module="app">
-        This is first { variable } and it's { asd } and this is last { asd }
-        <a href="{url}"></a>
+        This is first { variable }  and it's { asd } and this is last { asd }
+        <a href="{url}" target="{target}">asd</a>
     </div>
 
     <script>
         var n = new LangVar('app', {
             variable: 'my language variable',
-            asd: 'hello world'
-        })
+            asd: 'hello world',
+            url: 'http://google.com',
+            target: '_blank'
+        });
     </script>
 </body>
 </html>
