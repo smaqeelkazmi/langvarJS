@@ -36,7 +36,7 @@ class LangVar {
      * @private
      */
     _init() {
-        this.m = $$(`[${this._mqs}]`);
+        this.m = $(`[${this._mqs}]`);
         const compMod =  this._getCompileModule(this.m);  // get compiled module
         this.m.innerHTML = this._getGenContent(
             compMod.content, 
@@ -81,6 +81,7 @@ class LangVar {
             if (obj[k] !== undefined) {
                 c = c.replace(rgx, obj[k]);
             } else {
+                this._warnings(`Unable to find value for the variable [${k}]`);
                 c = c.replace(rgx, '');
             }
         });

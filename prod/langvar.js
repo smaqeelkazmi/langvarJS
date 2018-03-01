@@ -37,7 +37,7 @@ var isEquivalent = function isEquivalent(a, b) {
  * @return {NodeList} 
  */
 
-var $$ = function $$(q) {
+var $ = function $(q) {
     var selector = document.querySelectorAll(q);
     if (selector.length < 2) return selector[0];
     return selector;
@@ -98,7 +98,7 @@ var LangVar = function () {
     _createClass(LangVar, [{
         key: '_init',
         value: function _init() {
-            this.m = $$('[' + this._mqs + ']');
+            this.m = $('[' + this._mqs + ']');
             var compMod = this._getCompileModule(this.m); // get compiled module
             this.m.innerHTML = this._getGenContent(compMod.content, compMod.object); // print result in module
         }
@@ -140,12 +140,15 @@ var LangVar = function () {
     }, {
         key: '_getGenContent',
         value: function _getGenContent(c, obj) {
+            var _this = this;
+
             Object.keys(obj).map(function (k) {
                 var rgx = '{' + k + '}';
                 rgx = new RegExp(rgx, "g");
                 if (obj[k] !== undefined) {
                     c = c.replace(rgx, obj[k]);
                 } else {
+                    _this._warnings('Unable to find value for the variable [' + k + ']');
                     c = c.replace(rgx, '');
                 }
             });
