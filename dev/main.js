@@ -58,14 +58,44 @@ class LangVar {
         for (var i = 1; i < e.length; i++) {
             let n = e[i].split('}'); // last split and return only name without parantheses
             const val = n[0].replace(/\s/g, ''); // replace spaces
-            Object.assign(obj, {[val] : this.obj[val]}); // store variable name and it's defined value
+            Object.assign(obj, this._getVar(val)); // store variable name and it's defined value
             e[i] = `{${val}}${n[1]}`; // assign back to e
         }
         return {
             object: obj,            // variable used in module
             content: e.join('')     // content to replace module after compilation
+        };
+    }
+
+
+    /**
+     * Returns the variable with value by name as object
+     * @private
+     * @param {string} v - name of the variable to get the value
+     * @return {Object}
+     */
+    _getVar(v) {
+        const vHasChild = v.split('.'); // split by dot
+
+        if (vHasChild.length === 1) { // if has no child
+            return {
+                [v]: this.obj[v]
+            };
+        } else if (vHasChild.length === 2) { // if has one child
+            return {
+                [v]: this.obj[vHasChild[0]][vHasChild[1]]
+            };
+        } else if (vHasChild.length > 2) { // if has nested childs
+            return {
+                [v]: Object.byString(this.obj, v)
+            };
+        } else {
+            return {
+                [v]: undefined
+            };
         }
     }
+
 
     /**
      * Print Result 

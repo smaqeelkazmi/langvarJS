@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /* 
  * @type function to compare two objects
@@ -41,6 +41,40 @@ var $ = function $(q) {
     var selector = document.querySelectorAll(q);
     if (selector.length < 2) return selector[0];
     return selector;
+};
+
+/**
+ * Swap Keys with Values
+ * @param {Object} obj - Object to swap it's keys with values
+ * @return {Object}
+ */
+var swap = function swap(obj) {
+    var ret = {};
+    for (var k in obj) {
+        ret[obj[k]] = k;
+    }
+    return ret;
+};
+
+/**
+ * Get Nested Object value by using string as key
+ * @param {Object} o - Object ex: {a : { b : '' }}
+ * @param {string} s - String as Key ex: a.b
+ * @return {string}
+ */
+Object.byString = function (o, s) {
+    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    s = s.replace(/^\./, ''); // strip a leading dot
+    var a = s.split('.');
+    for (var i = 0, n = a.length; i < n; ++i) {
+        var k = a[i];
+        if (k in o) {
+            o = o[k];
+        } else {
+            return;
+        }
+    }
+    return o;
 };
 'use strict';
 
@@ -120,13 +154,39 @@ var LangVar = function () {
             for (var i = 1; i < e.length; i++) {
                 var n = e[i].split('}'); // last split and return only name without parantheses
                 var val = n[0].replace(/\s/g, ''); // replace spaces
-                Object.assign(obj, _defineProperty({}, val, this.obj[val])); // store variable name and it's defined value
+                Object.assign(obj, this._getVar(val)); // store variable name and it's defined value
                 e[i] = '{' + val + '}' + n[1]; // assign back to e
             }
             return {
                 object: obj, // variable used in module
                 content: e.join('') // content to replace module after compilation
             };
+        }
+
+        /**
+         * Returns the variable with value by name as object
+         * @private
+         * @param {string} v - name of the variable to get the value
+         * @return {Object}
+         */
+
+    }, {
+        key: '_getVar',
+        value: function _getVar(v) {
+            var vHasChild = v.split('.'); // split by dot
+
+            if (vHasChild.length === 1) {
+                // if has no child
+                return _defineProperty({}, v, this.obj[v]);
+            } else if (vHasChild.length === 2) {
+                // if has one child
+                return _defineProperty({}, v, this.obj[vHasChild[0]][vHasChild[1]]);
+            } else if (vHasChild.length > 2) {
+                // if has nested childs
+                return _defineProperty({}, v, Object.byString(this.obj, v));
+            } else {
+                return _defineProperty({}, v, undefined);
+            }
         }
 
         /**
