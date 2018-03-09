@@ -57,7 +57,7 @@ class LangVar {
         let obj = {}; // store variable names
         for (var i = 1; i < e.length; i++) {
             let n = e[i].split('}'); // last split and return only name without parantheses
-            const val = n[0].replace(/\s/g, ''); // replace spaces
+            const val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
             Object.assign(obj, this._getVar(val)); // store variable name and it's defined value
             e[i] = `{${val}}${n[1]}`; // assign back to e
         }
@@ -75,25 +75,43 @@ class LangVar {
      * @return {Object}
      */
     _getVar(v) {
-        const vHasChild = v.split('.'); // split by dot
-
-        if (vHasChild.length === 1) { // if has no child
-            return {
-                [v]: this.obj[v]
-            };
-        } else if (vHasChild.length === 2) { // if has one child
-            return {
-                [v]: this.obj[vHasChild[0]][vHasChild[1]]
-            };
-        } else if (vHasChild.length > 2) { // if has nested childs
-            return {
-                [v]: Object.byString(this.obj, v)
-            };
-        } else {
-            return {
-                [v]: undefined
-            };
+        let val = [v];
+        let exp = null;
+        // check if variable has math expression
+        if (hasExp(v)) {
+            exp = getExp(v);
+            val = getExpVar(v);
         }
+
+        // check if variable has filter
+
+        // apply() the variable to get value in  
+        const applyVar = (v) => {
+            if (hasChildVar(v)) { // if variable is using nested object value
+                return getChildVar(v, this);
+            } else { // if variable has no child
+                return this.obj[v];
+            }
+        };
+        
+        // check if variable is valid the add to [val]
+        if (val.length > 1) { // if variables are in multiple
+            let vExp = v;
+            for (const k in val) {
+                const a = applyVar(val[k]); // get value of single variable
+                const b = (a !== undefined && typeof a === 'number') ? a : 0; // check and filter
+                vExp = vExp.replace(val[k], b);
+            }
+            val = `${eval(vExp)}`;
+        } else if ( v !== '') {
+            val = applyVar(v);
+        }
+        
+        console.log(v);
+
+        return {
+            [v]: val
+        };
     }
 
 

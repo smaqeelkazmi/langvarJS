@@ -1,3 +1,4 @@
+"use strict";
 'use strict';
 
 /* 
@@ -153,7 +154,7 @@ var LangVar = function () {
             var obj = {}; // store variable names
             for (var i = 1; i < e.length; i++) {
                 var n = e[i].split('}'); // last split and return only name without parantheses
-                var val = n[0].replace(/\s/g, ''); // replace spaces
+                var val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
                 Object.assign(obj, this._getVar(val)); // store variable name and it's defined value
                 e[i] = '{' + val + '}' + n[1]; // assign back to e
             }
@@ -173,20 +174,46 @@ var LangVar = function () {
     }, {
         key: '_getVar',
         value: function _getVar(v) {
-            var vHasChild = v.split('.'); // split by dot
+            var _this = this;
 
-            if (vHasChild.length === 1) {
-                // if has no child
-                return _defineProperty({}, v, this.obj[v]);
-            } else if (vHasChild.length === 2) {
-                // if has one child
-                return _defineProperty({}, v, this.obj[vHasChild[0]][vHasChild[1]]);
-            } else if (vHasChild.length > 2) {
-                // if has nested childs
-                return _defineProperty({}, v, Object.byString(this.obj, v));
-            } else {
-                return _defineProperty({}, v, undefined);
+            var val = [v];
+            var exp = null;
+            // check if variable has math expression
+            if (hasExp(v)) {
+                exp = getExp(v);
+                val = getExpVar(v);
             }
+
+            // check if variable has filter
+
+            // apply() the variable to get value in  
+            var applyVar = function applyVar(v) {
+                if (hasChildVar(v)) {
+                    // if variable is using nested object value
+                    return getChildVar(v, _this);
+                } else {
+                    // if variable has no child
+                    return _this.obj[v];
+                }
+            };
+
+            // check if variable is valid the add to [val]
+            if (val.length > 1) {
+                // if variables are in multiple
+                var vExp = v;
+                for (var k in val) {
+                    var a = applyVar(val[k]); // get value of single variable
+                    var b = a !== undefined && typeof a === 'number' ? a : 0; // check and filter
+                    vExp = vExp.replace(val[k], b);
+                }
+                val = '' + eval(vExp);
+            } else if (v !== '') {
+                val = applyVar(v);
+            }
+
+            console.log(v);
+
+            return _defineProperty({}, v, val);
         }
 
         /**
@@ -200,7 +227,7 @@ var LangVar = function () {
     }, {
         key: '_getGenContent',
         value: function _getGenContent(c, obj) {
-            var _this = this;
+            var _this2 = this;
 
             Object.keys(obj).map(function (k) {
                 var rgx = '{' + k + '}';
@@ -208,7 +235,7 @@ var LangVar = function () {
                 if (obj[k] !== undefined) {
                     c = c.replace(rgx, obj[k]);
                 } else {
-                    _this._warnings('Unable to find value for the variable [' + k + ']');
+                    _this2._warnings('Unable to find value for the variable [' + k + ']');
                     c = c.replace(rgx, '');
                 }
             });
@@ -238,3 +265,62 @@ var LangVar = function () {
 
     return LangVar;
 }();
+"use strict";
+
+/**
+ * Check if variable is using a nested object
+ * @private
+ * @param {string} v
+ * @return {boolean}
+ */
+var rgxChild = /[\.\+\[]/g;
+var hasChildVar = function hasChildVar(v) {
+    if (rgxChild.test(v)) {
+        return true;
+    }
+    return false;
+};
+
+/**
+ * @private
+ */
+var getChildVar = function getChildVar(v, self) {
+    var sp = v.split('.');
+    if (sp.length === 2) {
+        // if has one child
+        return self.obj[sp[0]][sp[1]];
+    } else if (sp.length > 2) {
+        // if has nested childs
+        return Object.byString(self.obj, v);
+    }
+};
+
+/**
+ * Check if variable is using an expression
+ * @private
+ * @param {string} v
+ * @return {boolean}
+ */
+var rgxExp = /[\+\-\*\/\\]/g;
+var hasExp = function hasExp(v) {
+    if (rgxExp.test(v)) {
+        return true;
+    }
+    return false;
+};
+
+var getExp = function getExp(v) {
+    return v.match(rgxExp);
+};
+
+var getExpVar = function getExpVar(v) {
+    return v.split(rgxExp);
+};
+
+var stripExp = function stripExp(v) {
+    exp = getExp(v);
+};
+
+var applyMathExp = function applyMathExp(x, v1, v2) {
+    if (x === "+") {}
+};
