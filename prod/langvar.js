@@ -141,7 +141,7 @@ var LangVar = function () {
         /**
          * Remove Spaces
          * Store used variables name in {obj}
-         * return object of used variables and modified content
+         * return object of used variables and modified content with removed spaces
          * @private
          * @param {NodeSelector} - Module Node to compile and produce result
          * @return {Object} - object -> variables with values && content -> compiled content for modification
@@ -155,7 +155,7 @@ var LangVar = function () {
             for (var i = 1; i < e.length; i++) {
                 var n = e[i].split('}'); // last split and return only name without parantheses
                 var val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
-                Object.assign(obj, this._getVar(val)); // store variable name and it's defined value
+                Object.assign(obj, this._getVar(val)); // store variable name as key and it's defined value as val
                 e[i] = '{' + val + '}' + n[1]; // assign back to e
             }
             return {
@@ -165,7 +165,7 @@ var LangVar = function () {
         }
 
         /**
-         * Returns the variable with value by name as object
+         * Returns the variable with value as { varName: varVal }
          * @private
          * @param {string} v - name of the variable to get the value
          * @return {Object}
@@ -180,13 +180,13 @@ var LangVar = function () {
             var exp = null;
             // check if variable has math expression
             if (hasExp(v)) {
-                exp = getExp(v);
-                val = getExpVar(v);
+                exp = getExp(v); // get the expression used in statement
+                val = getExpVar(v); // get the variable used in statement
             }
 
             // check if variable has filter
 
-            // apply() the variable to get value in  
+            // apply() the variable to get value  
             var applyVar = function applyVar(v) {
                 if (hasChildVar(v)) {
                     // if variable is using nested object value
@@ -295,13 +295,13 @@ var getChildVar = function getChildVar(v, self) {
     }
 };
 
+var rgxExp = /[\+\-\*\/\\]/g;
 /**
  * Check if variable is using an expression
  * @private
  * @param {string} v
  * @return {boolean}
  */
-var rgxExp = /[\+\-\*\/\\]/g;
 var hasExp = function hasExp(v) {
     if (rgxExp.test(v)) {
         return true;

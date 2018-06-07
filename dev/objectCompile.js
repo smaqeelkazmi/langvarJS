@@ -26,13 +26,13 @@ const getChildVar = (v, self) => {
 };
 
 
+const rgxExp = /[\+\-\*\/\\]/g;
 /**
  * Check if variable is using an expression
  * @private
  * @param {string} v
  * @return {boolean}
  */
-const rgxExp = /[\+\-\*\/\\]/g;
 const hasExp = (v) => {
     if ((rgxExp).test(v)) {
         return true;
@@ -50,10 +50,10 @@ const getExpVar = (v) => {
 
 const stripExp = (v) => {
     exp = getExp(v);
-}
+};
 
 const applyMathExp = (x, v1, v2) => {
     if (x === "+") {
         
     }
-}
+};

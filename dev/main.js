@@ -47,7 +47,7 @@ class LangVar {
     /**
      * Remove Spaces
      * Store used variables name in {obj}
-     * return object of used variables and modified content
+     * return object of used variables and modified content with removed spaces
      * @private
      * @param {NodeSelector} - Module Node to compile and produce result
      * @return {Object} - object -> variables with values && content -> compiled content for modification
@@ -58,7 +58,7 @@ class LangVar {
         for (var i = 1; i < e.length; i++) {
             let n = e[i].split('}'); // last split and return only name without parantheses
             const val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
-            Object.assign(obj, this._getVar(val)); // store variable name and it's defined value
+            Object.assign(obj, this._getVar(val)); // store variable name as key and it's defined value as val
             e[i] = `{${val}}${n[1]}`; // assign back to e
         }
         return {
@@ -69,7 +69,7 @@ class LangVar {
 
 
     /**
-     * Returns the variable with value by name as object
+     * Returns the variable with value as { varName: varVal }
      * @private
      * @param {string} v - name of the variable to get the value
      * @return {Object}
@@ -79,13 +79,13 @@ class LangVar {
         let exp = null;
         // check if variable has math expression
         if (hasExp(v)) {
-            exp = getExp(v);
-            val = getExpVar(v);
+            exp = getExp(v); // get the expression used in statement
+            val = getExpVar(v); // get the variable used in statement
         }
 
         // check if variable has filter
 
-        // apply() the variable to get value in  
+        // apply() the variable to get value  
         const applyVar = (v) => {
             if (hasChildVar(v)) { // if variable is using nested object value
                 return getChildVar(v, this);
@@ -155,3 +155,20 @@ class LangVar {
      */
     
 }
+
+
+
+
+
+
+
+
+
+
+
+// for (const k in exp) {
+//     if (exp.hasOwnProperty(k)) {
+//         const val = exp[k];
+//         exp[k] = `\\${val}`; // replace math expression with string i.e. + with \+
+//     }
+// }
