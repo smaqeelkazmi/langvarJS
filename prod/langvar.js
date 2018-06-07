@@ -156,6 +156,7 @@ var LangVar = function () {
                 var n = e[i].split('}'); // last split and return only name without parantheses
                 var val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
                 Object.assign(obj, this._getVar(val)); // store variable name as key and it's defined value as val
+                val = replaceMathSymbol(val); // replace math symbols with strings for regex validation
                 e[i] = '{' + val + '}' + n[1]; // assign back to e
             }
             return {
@@ -207,11 +208,10 @@ var LangVar = function () {
                     vExp = vExp.replace(val[k], b);
                 }
                 val = '' + eval(vExp);
+                v = replaceMathSymbol(v); // replace math symbols with strings for regex validation
             } else if (v !== '') {
                 val = applyVar(v);
             }
-
-            console.log(v);
 
             return _defineProperty({}, v, val);
         }
@@ -265,7 +265,14 @@ var LangVar = function () {
 
     return LangVar;
 }();
-"use strict";
+
+// for (const k in exp) {
+//     if (exp.hasOwnProperty(k)) {
+//         const val = exp[k];
+//         exp[k] = `\\${val}`; // replace math expression with string i.e. + with \+
+//     }
+// }
+'use strict';
 
 /**
  * Check if variable is using a nested object
@@ -323,4 +330,8 @@ var stripExp = function stripExp(v) {
 
 var applyMathExp = function applyMathExp(x, v1, v2) {
     if (x === "+") {}
+};
+
+var replaceMathSymbol = function replaceMathSymbol(v) {
+    return v.replace(/\+/g, '%p%').replace(/\-/g, '%m%').replace(/\*/g, '%mp%').replace(/\//g, '%d%');
 };

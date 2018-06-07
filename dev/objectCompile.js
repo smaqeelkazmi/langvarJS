@@ -57,3 +57,10 @@ const applyMathExp = (x, v1, v2) => {
         
     }
 };
+
+const replaceMathSymbol = (v) => {
+    return v.replace(/\+/g, '%p%')
+        .replace(/\-/g, '%m%')
+        .replace(/\*/g, '%mp%')
+        .replace(/\//g, '%d%');
+}

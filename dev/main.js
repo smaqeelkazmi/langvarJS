@@ -57,8 +57,9 @@ class LangVar {
         let obj = {}; // store variable names
         for (var i = 1; i < e.length; i++) {
             let n = e[i].split('}'); // last split and return only name without parantheses
-            const val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
+            let val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
             Object.assign(obj, this._getVar(val)); // store variable name as key and it's defined value as val
+            val = replaceMathSymbol(val); // replace math symbols with strings for regex validation
             e[i] = `{${val}}${n[1]}`; // assign back to e
         }
         return {
@@ -103,11 +104,11 @@ class LangVar {
                 vExp = vExp.replace(val[k], b);
             }
             val = `${eval(vExp)}`;
+            v = replaceMathSymbol(v); // replace math symbols with strings for regex validation
         } else if ( v !== '') {
             val = applyVar(v);
         }
         
-        console.log(v);
 
         return {
             [v]: val
