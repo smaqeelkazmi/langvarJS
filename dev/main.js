@@ -19,6 +19,8 @@ class LangVar {
             _mqs: `lv-module="${m}"`,       // module query selector
             _w: true,                       // Enable or Disable warning
             //_mC: null                       // Stores Module content after modification
+            _openP: "{{",
+            _closeP: "}}"
         };
         Object.assign(this, vars);
 
@@ -53,14 +55,14 @@ class LangVar {
      * @return {Object} - object -> variables with values && content -> compiled content for modification
      */
     _getCompileModule(elm) {
-        let e = elm.innerHTML.split("{"); // get element content with frst split
+        let e = elm.innerHTML.split(this._openP); // get element content with frst split
         let obj = {}; // store variable names
         for (var i = 1; i < e.length; i++) {
-            let n = e[i].split('}'); // last split and return only name without parantheses
+            let n = e[i].split(this._closeP); // last split and return only name without parantheses
             let val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
             Object.assign(obj, this._getVar(val)); // store variable name as key and it's defined value as val
             val = replaceMathSymbol(val); // replace math symbols with strings for regex validation
-            e[i] = `{${val}}${n[1]}`; // assign back to e
+            e[i] = `${this._openP}${val}${this._closeP}${n[1]}`; // assign back to e
         }
         return {
             object: obj,            // variable used in module
@@ -125,7 +127,7 @@ class LangVar {
      */
     _getGenContent(c, obj) {
         Object.keys(obj).map((k) => {
-            let rgx = `{${k}}`;
+            let rgx = `${this._openP}${k}${this._closeP}`;
             rgx = new RegExp(rgx, "g");
             if (obj[k] !== undefined) {
                 c = c.replace(rgx, obj[k]);
@@ -156,20 +158,3 @@ class LangVar {
      */
     
 }
-
-
-
-
-
-
-
-
-
-
-
-// for (const k in exp) {
-//     if (exp.hasOwnProperty(k)) {
-//         const val = exp[k];
-//         exp[k] = `\\${val}`; // replace math expression with string i.e. + with \+
-//     }
-// }

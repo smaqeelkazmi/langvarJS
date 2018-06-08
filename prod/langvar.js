@@ -77,7 +77,7 @@ Object.byString = function (o, s) {
     }
     return o;
 };
-'use strict';
+"use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -109,13 +109,15 @@ var LangVar = function () {
             m: null, // Module Node before modification
             obj: obj, // object
             //_mObj: {},                      // Stores Module Object while compiling
-            _mqs: 'lv-module="' + m + '"', // module query selector
-            _w: true // Enable or Disable warning
+            _mqs: "lv-module=\"" + m + "\"", // module query selector
+            _w: true, // Enable or Disable warning
             //_mC: null                       // Stores Module content after modification
+            _openP: "{{",
+            _closeP: "}}"
         };
         Object.assign(this, vars);
 
-        if ((typeof m === 'undefined' ? 'undefined' : _typeof(m)) !== undefined && typeof m === 'string') {
+        if ((typeof m === "undefined" ? "undefined" : _typeof(m)) !== undefined && typeof m === 'string') {
             this._init();
         }
 
@@ -131,9 +133,9 @@ var LangVar = function () {
 
 
     _createClass(LangVar, [{
-        key: '_init',
+        key: "_init",
         value: function _init() {
-            this.m = $('[' + this._mqs + ']');
+            this.m = $("[" + this._mqs + "]");
             var compMod = this._getCompileModule(this.m); // get compiled module
             this.m.innerHTML = this._getGenContent(compMod.content, compMod.object); // print result in module
         }
@@ -148,16 +150,16 @@ var LangVar = function () {
          */
 
     }, {
-        key: '_getCompileModule',
+        key: "_getCompileModule",
         value: function _getCompileModule(elm) {
-            var e = elm.innerHTML.split("{"); // get element content with frst split
+            var e = elm.innerHTML.split(this._openP); // get element content with frst split
             var obj = {}; // store variable names
             for (var i = 1; i < e.length; i++) {
-                var n = e[i].split('}'); // last split and return only name without parantheses
+                var n = e[i].split(this._closeP); // last split and return only name without parantheses
                 var val = n[0].replace(/\s/g, ''); // replace spaces and get variable name only
                 Object.assign(obj, this._getVar(val)); // store variable name as key and it's defined value as val
                 val = replaceMathSymbol(val); // replace math symbols with strings for regex validation
-                e[i] = '{' + val + '}' + n[1]; // assign back to e
+                e[i] = "" + this._openP + val + this._closeP + n[1]; // assign back to e
             }
             return {
                 object: obj, // variable used in module
@@ -173,7 +175,7 @@ var LangVar = function () {
          */
 
     }, {
-        key: '_getVar',
+        key: "_getVar",
         value: function _getVar(v) {
             var _this = this;
 
@@ -207,7 +209,7 @@ var LangVar = function () {
                     var b = a !== undefined && typeof a === 'number' ? a : 0; // check and filter
                     vExp = vExp.replace(val[k], b);
                 }
-                val = '' + eval(vExp);
+                val = "" + eval(vExp);
                 v = replaceMathSymbol(v); // replace math symbols with strings for regex validation
             } else if (v !== '') {
                 val = applyVar(v);
@@ -225,17 +227,17 @@ var LangVar = function () {
          */
 
     }, {
-        key: '_getGenContent',
+        key: "_getGenContent",
         value: function _getGenContent(c, obj) {
             var _this2 = this;
 
             Object.keys(obj).map(function (k) {
-                var rgx = '{' + k + '}';
+                var rgx = "" + _this2._openP + k + _this2._closeP;
                 rgx = new RegExp(rgx, "g");
                 if (obj[k] !== undefined) {
                     c = c.replace(rgx, obj[k]);
                 } else {
-                    _this2._warnings('Unable to find value for the variable [' + k + ']');
+                    _this2._warnings("Unable to find value for the variable [" + k + "]");
                     c = c.replace(rgx, '');
                 }
             });
@@ -250,7 +252,7 @@ var LangVar = function () {
          */
 
     }, {
-        key: '_warnings',
+        key: "_warnings",
         value: function _warnings(w) {
             if (this._w === true) {
                 console.warn(w);
@@ -265,13 +267,6 @@ var LangVar = function () {
 
     return LangVar;
 }();
-
-// for (const k in exp) {
-//     if (exp.hasOwnProperty(k)) {
-//         const val = exp[k];
-//         exp[k] = `\\${val}`; // replace math expression with string i.e. + with \+
-//     }
-// }
 'use strict';
 
 /**
