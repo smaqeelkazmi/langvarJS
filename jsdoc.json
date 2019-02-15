@@ -1,0 +1,16 @@
+{
+    "templates": {
+        "systemName": "LangVarJS",
+        "footer": "LangVarJS a lightweight Javascript Library",
+        "copyright": "Copyright 2018",
+        "includeDate": false,
+        "navType": "{vertical|inline}",
+        "theme": "spacelab",
+        "linenums": false,
+        "collapseSymbols": true,
+        "inverseNav": true,
+        "outputSourceFiles": true,
+        "outputSourcePath": true,
+        "search": true
+    }
+}

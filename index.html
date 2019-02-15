@@ -6,42 +6,31 @@
     <title>Demo - LangVarJS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="development/main.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    <script src="prod/langvar.js"></script>
+    <!-- <script src="dev/main.js"></script> -->
 </head>
 <body>
-    <h1>hello
-        <span lv="LANGVAR"></span>
-        <span lv="VAR">This is good value</span>
-    </h1>
-    <p lv-module="INIT">hello
-        <a href="#">%LANGVAR% & %VAR%</a>
-    </p>
+    <div lv-module="app">
+        This is first {{variable}} and it's {{ asd }} and this is last {{ asd }}
+        <a href="{{url}}" target="{{target}}">asd</a> {{a.c.0}} {{n2 * n}}
+    </div>
 
     <script>
-        var vr = {
-            LANGVAR : "World...",
-        };
-        const lvn = new LangVar(vr);
-        lvn.module('INIT', {
-            LANGVAR: "Before updated module",
-            VAR: ''
+        var n = new LangVar('app', {
+            variable: 'my language variable',
+            asd: 'hello world',
+            url: 'http://google.com',
+            target: '_blank',
+            a: {
+                c: [
+                    "hello world in array"
+                ],
+                b: 'hello world'
+            },
+            n2: 20,
+            n: 10,
         });
-
-        function update() {
-            lvn.update({
-                LANGVAR : 'World... is now on next',
-                VAR: 'VAR updated...............'
-            });
-            lvn.update('INIT', {
-                VAR: 'asd',
-                LANGVAR: "After module updated",
-            })
-        }
-
-         $('a').click(function() {
-            update();
-        })
     </script>
 </body>
 </html>
