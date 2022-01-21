@@ -66,3 +66,5 @@ or we can update the basic variables that I used in *Example 1* which are define
     LangVar.update({
         myVariable: 'Ahh...! It's very easy to use and update the HTML content'
     })
+    
+Test 1
